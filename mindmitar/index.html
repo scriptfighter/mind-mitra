@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Mitra - Your Mental Health Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;           /* Deep blue (trust, calm) */
+            --primary-dark: #1e293b;      /* Navy blue (professional, strong) */
+            --secondary: #38bdf8;         /* Sky blue (fresh, modern) */
+            --accent: #f59e42;            /* Warm orange (friendly, inviting) */
+            --light: #f9fafb;             /* Soft white (clean background) */
+            --dark: #0f172a;              /* Almost black (text, contrast) */
+            --success: #22c55e;           /* Green (positive feedback) */
+            --warning: #fbbf24;           /* Amber (attention) */
+            --danger: #ef4444;            /* Red (alerts, errors) */
+            --gray: #64748b;              /* Muted blue-gray (subtle text) */
+            --light-gray: #e5e7eb;        /* Pale gray (borders, backgrounds) */
+            --transition: all 0.2s cubic-bezier(.4,0,.2,1);
+            --shadow: 0 8px 32px rgba(30, 41, 59, 0.10);
+            --border-radius: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            height: 90vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgb(255, 255, 255);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Welcome Page */
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            flex: 1;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                        url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1000') no-repeat center center;
+            background-size: cover;
+        }
+
+        .welcome-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--gray);
+            max-width: 700px;
+        }
+
+        .features {
+            display: flex;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            width: 250px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .auth-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--primary-dark);
+            text-align: center;
+        }
+
+        .auth-form {
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .auth-footer {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Main Page */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .scanner-container {
+            position: relative;
+            height: 300px;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .face-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .face-placeholder::before {
+            content: "";
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: var(--light);
+        }
+
+        .face-placeholder::after {
+            content: "";
+            position: absolute;
+            width: 140px;
+            height: 80px;
+            border-bottom-left-radius: 70px;
+            border-bottom-right-radius: 70px;
+            background: var(--accent);
+            bottom: 30px;
+        }
+
+        .scan-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .neutral {
+            color: var(--warning);
+        }
+
+        .negative {
+            color: var(--danger);
+        }
+
+        /* Chatbot Page */
+        .chatbot-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .chat-title h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .chat-title p {
+            color: var(--gray);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: var(--light-gray);
+            color: var(--dark);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            text-align: right;
+            opacity: 0.7;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) { 
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-container">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <span>Mind Mitra</span>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="homeBtn"><i class="fas fa-home"></i> Home</button>
+                    <button class="btn btn-primary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+
+            <!-- Welcome Page -->
+            <div class="page active" id="welcomePage">
+                <div class="welcome-container">
+                    <h1 class="welcome-title">Welcome to Mind Mitra</h1>
+                    <p class="welcome-subtitle">Your personal mental health companion using AI-powered face scanning technology to help you understand and improve your emotional wellbeing.</p>
+                    
+                    <div class="features">
+                        <div class="feature-card">
+                            <i class="fas fa-camera"></i>
+                            <h3>Face Analysis</h3>
+                            <p>Advanced AI scans facial expressions to detect emotional states and mental wellbeing indicators.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Health Tracking</h3>
+                            <p>Monitor your mental health patterns over time with detailed analytics and insights.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-robot"></i>
+                            <h3>AI Companion</h3>
+                            <p>24/7 access to our empathetic chatbot for support and guidance whenever you need it.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="auth-buttons" style="display: flex; gap: 15px;">
+                        <button class="btn btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                        <button class="btn btn-secondary" id="signupBtn"><i class="fas fa-user-plus"></i> Sign Up</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Page -->
+            <div class="page" id="loginPage">
+                <div class="auth-container">
+                    <h1 class="auth-title">Login to Your Account</h1>
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                        </div>
+                        <button class="btn btn-primary" id="doLogin" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <div class="auth-footer">
+                            <p>Don't have an account? <a href="#" id="goToSignup">Sign Up</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign Up Page -->
+            <div class="page" id="signupPage">
+                <div class="auth-container">
+                    <h1 class="auth-title">Create Your Account</h1>
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" class="form-control" id="signupName" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">Email Address</label>
+                            <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" class="form-control" id="signupPassword" placeholder="Create a password">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupConfirm">Confirm Password</label>
+                            <input type="password" class="form-control" id="signupConfirm" placeholder="Confirm your password">
+                        </div>
+                        <button class="btn btn-primary" id="doSignup" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="#" id="goToLogin">Login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Page -->
+            <div class="page" id="mainPage">
+                <div class="dashboard">
+                    <div class="card">
+                        <h2 class="card-title"><i class="fas fa-camera"></i> Face Scanner</h2>
+                        <p>Position your face within the frame and click "Scan" to analyze your mental state.</p>
+                        
+                        <div class="scanner-container">
+                            <div class="face-placeholder"></div>
+                        </div>
+                        
+                        <button class="btn btn-primary scan-btn" id="scanBtn">
+                            <i class="fas fa-sync"></i> Scan My Face
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title"><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+                        <p>Your mental health assessment based on facial expression analysis:</p>
+                        
+                        <div class="results">
+                            <div class="result-item">
+                                <span>Overall Mood</span>
+                                <span class="result-value neutral">Neutral</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Stress Level</span>
+                                <span class="result-value positive">Low</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Happiness</span>
+                                <span class="result-value neutral">Moderate</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Anxiety</span>
+                                <span class="result-value negative">Elevated</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Fatigue</span>
+                                <span class="result-value neutral">Normal</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary" style="margin-top: 20px; width: 100%;" id="chatbotBtn">
+                            <i class="fas fa-comments"></i> Talk to Mental Health Assistant
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chatbot Page -->
+            <div class="page" id="chatbotPage">
+                <div class="chatbot-container">
+                    <div class="chat-header">
+                        <div class="chat-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="chat-title">
+                            <h2>Mental Health Assistant</h2>
+                            <p>How can I help you today?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            Hello! I'm your mental health assistant. How are you feeling today?
+                            <div class="message-time">10:00 AM</div>
+                        </div>
+                        <div class="message user">
+                            I've been feeling a bit anxious lately.
+                            <div class="message-time">10:02 AM</div>
+                        </div>
+                        <div class="message bot">
+                            I'm sorry to hear that. Anxiety can be challenging. Would you like to talk about what's been causing these feelings?
+                            <div class="message-time">10:02 AM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" placeholder="Type your message here...">
+                        <button class="send-btn" id="sendMessage">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2025 Mind Mitra. All rights reserved. Your mental health is our priority.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const welcomePage = document.getElementById('welcomePage');
+            const loginPage = document.getElementById('loginPage');
+            const signupPage = document.getElementById('signupPage');
+            const mainPage = document.getElementById('mainPage');
+            const chatbotPage = document.getElementById('chatbotPage');
+            
+            // Buttons
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const goToLogin = document.getElementById('goToLogin');
+            const goToSignup = document.getElementById('goToSignup');
+            const doLogin = document.getElementById('doLogin');
+            const doSignup = document.getElementById('doSignup');
+            const scanBtn = document.getElementById('scanBtn');
+            const chatbotBtn = document.getElementById('chatbotBtn');
+            const sendMessage = document.getElementById('sendMessage');
+            const messageInput = document.getElementById('messageInput');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Navigation Functions
+            function showPage(page) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                page.classList.add('active');
+            }
+            
+            // Welcome Page Actions
+            loginBtn.addEventListener('click', () => showPage(loginPage));
+            signupBtn.addEventListener('click', () => showPage(signupPage));
+            
+            // Auth Navigation
+            goToLogin.addEventListener('click', () => showPage(loginPage));
+            goToSignup.addEventListener('click', () => showPage(signupPage));
+            
+            // Login/Signup Actions
+            doLogin.addEventListener('click', function() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if(email && password) {
+                    showPage(mainPage);
+                } else {
+                    alert('Please enter both email and password');
+                }
+            });
+            
+            doSignup.addEventListener('click', function() {
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirm = document.getElementById('signupConfirm').value;
+                
+                if(name && email && password && confirm) {
+                    if(password === confirm) {
+                        showPage(mainPage);
+                    } else {
+                        alert('Passwords do not match');
+                    }
+                } else {
+                    alert('Please fill all fields');
+                }
+            });
+            
+            // Main Page Actions
+            scanBtn.addEventListener('click', function() {
+                // Simulate scanning process
+                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+                scanBtn.disabled = true;
+                
+                setTimeout(() => {
+                    // Update results with random values
+                    const results = document.querySelectorAll('.result-value');
+                    const statuses = ['positive', 'neutral', 'negative'];
+                    
+                    results.forEach(result => {
+                        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                        result.textContent = 
+                            randomStatus === 'positive' ? 'Low' : 
+                            randomStatus === 'neutral' ? 'Moderate' : 'Elevated';
+                        result.className = 'result-value ' + randomStatus;
+                    });
+                    
+                    scanBtn.innerHTML = '<i class="fas fa-sync"></i> Scan Again';
+                    scanBtn.disabled = false;
+                    
+                    // Show notification
+                    alert('Face scan complete! Analysis results updated.');
+                }, 3000);
+            });
+            
+            chatbotBtn.addEventListener('click', () => showPage(chatbotPage));
+            
+            // Chatbot Functionality
+            sendMessage.addEventListener('click', sendChatMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if(e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+            
+            function sendChatMessage() {
+                const message = messageInput.value.trim();
+                if(message) {
+                    // Add user message
+                    addMessageToChat(message, 'user');
+                    messageInput.value = '';
+                    
+                    // Simulate bot response after delay
+                    setTimeout(() => {
+                        const responses = [
+                            "I understand. Could you tell me more about what's been on your mind?",
+                            "That sounds challenging. Have you tried any relaxation techniques?",
+                            "Thank you for sharing. How long have you been feeling this way?",
+                            "I'm here to listen. What else would you like to talk about?",
+                            "Your feelings are valid. Would you like to explore some coping strategies?"
+                        ];
+                        
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addMessageToChat(randomResponse, 'bot');
+                    }, 1000);
+                }
+            }
+            
+            function addMessageToChat(message, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', sender);
+                
+                const now = new Date();
+                const timeString = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+                
+                messageElement.innerHTML = `
+                    ${message}
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Header Navigation
+            homeBtn.addEventListener('click', () => showPage(welcomePage));
+            logoutBtn.addEventListener('click', function() {
+                showPage(welcomePage);
+                alert('You have been logged out successfully');
+            });
+            
+            // Initialize with welcome page
+            showPage(welcomePage);
+        });
+    </script>
+</body>
+</html>
